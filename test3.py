@@ -241,8 +241,8 @@ class Token:
                 InnerTxnBuilder.SetFields(
                     {
                         TxnField.type_enum: TxnType.AssetConfig,
-                        TxnField.config_asset_name: Txn.application_args[5],
-                        TxnField.config_asset_unit_name: Txn.application_args[5],
+                        TxnField.config_asset_name: Bytes("hi"),
+                        TxnField.config_asset_unit_name: Bytes("there"),
                         TxnField.config_asset_total: Int(int(1e10)),  # Is this needed?
                         TxnField.config_asset_decimals: Int(8),
                         TxnField.config_asset_manager: mine,
@@ -252,9 +252,7 @@ class Token:
                 ),
                 InnerTxnBuilder.Submit(),
         
-                magic_store(uid.load(), InnerTxn.created_asset_id()),
-
-                Log(Itob(InnerTxn.created_asset_id())),
+#                Log(Itob(InnerTxn.created_asset_id())),
         
                 Approve()
             ])
@@ -362,7 +360,7 @@ class Token:
         print("appID = " + str(appID))
 
         print("create wrapped coin 0")
-        self.createWrapped(client, appID, player, 201000, 0)
+        self.createWrapped(client, appID, foundation, 201000, 0)
 
         pprint.pprint(self.read_state(client, foundation.getAddress(), appID))
 
