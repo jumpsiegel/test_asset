@@ -252,7 +252,7 @@ class Token:
                 ),
                 InnerTxnBuilder.Submit(),
         
-#                Log(Itob(InnerTxn.created_asset_id())),
+                Log(Itob(InnerTxn.created_asset_id())),
         
                 Approve()
             ])
