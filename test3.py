@@ -232,6 +232,12 @@ class Token:
         def magic_store(key: TealType.bytes, val: any):
             return Seq([App.globalPut(key, val)])
 
+        @Subroutine(TealType.bytes)
+        def extract_value(id) -> Expr:
+            maybe = AssetParam.url(id)
+
+            return Seq(maybe, Assert(maybe.hasValue()), maybe.value())
+
         def createWrapped():
             uid = ScratchVar()
             mine = Global.current_application_address()
@@ -243,6 +249,7 @@ class Token:
                         TxnField.type_enum: TxnType.AssetConfig,
                         TxnField.config_asset_name: Bytes("hi"),
                         TxnField.config_asset_unit_name: Bytes("there"),
+                        TxnField.config_asset_url: Bytes("testdata"),
                         TxnField.config_asset_total: Int(int(1e10)),  # Is this needed?
                         TxnField.config_asset_decimals: Int(8),
                         TxnField.config_asset_manager: mine,
@@ -251,8 +258,11 @@ class Token:
                     }
                 ),
                 InnerTxnBuilder.Submit(),
-        
+
+                # We know we can get it
                 Log(Itob(InnerTxn.created_asset_id())),
+                # This is the one that fails
+                Log(extract_value(InnerTxn.created_asset_id())),
         
                 Approve()
             ])
